@@ -1,0 +1,3326 @@
+   0  $accept : input $end
+
+   1  input :
+   2        | input line
+
+   3  line : programa
+
+   4  programa : decl_proto decl_var decl_func
+
+   5  decl_proto : PROTO tipo ID LPAR argumentos RPAR SEMICOLON decl_proto
+   6             |
+
+   7  decl_var : tipo lista_var SEMICOLON decl_var
+   8           |
+
+   9  tipo : basico compuesto
+  10       | STRUCT LLLAVE decl_var RLLAVE
+  11       | puntero
+
+  12  puntero : PTR basico
+
+  13  basico : INT
+  14         | FLOAT
+  15         | DOUBLE
+  16         | COMPLEX
+  17         | RUNE
+  18         | VOID
+  19         | STRING
+
+  20  compuesto : LCORCHETE LITERAL_ENTERA RCORCHETE compuesto
+  21            |
+
+  22  lista_var : lista_var COMA ID
+  23            | ID
+
+  24  decl_func : FUNC tipo ID LPAR argumentos RPAR bloque decl_func
+  25            |
+
+  26  argumentos : lista_args
+  27             |
+
+  28  lista_args : lista_args COMA tipo ID
+  29             | tipo ID
+
+  30  bloque : LLLAVE declaraciones instrucciones RLLAVE
+
+  31  declaraciones : decl_var
+
+  32  instrucciones : instrucciones sentencia
+  33                | sentencia
+
+  34  sentencia : asignacion
+  35            | resolve
+
+  36  resolve : matched_stmt M
+
+  37  matched_stmt : IF LPAR exp1 RPAR M matched_stmt
+  38               | IF LPAR exp1 RPAR M matched_stmt ELSE N M matched_stmt
+  39               | WHILE LPAR exp1 RPAR matched_stmt
+  40               | DO matched_stmt WHILE LPAR exp RPAR SEMICOLON
+  41               | BREAK SEMICOLON
+  42               | bloque
+  43               | RETURN exp SEMICOLON
+  44               | RETURN SEMICOLON
+  45               | SWITCH LPAR exp RPAR LLLAVE casos RLLAVE
+  46               | PRINT exp SEMICOLON
+  47               | SCAN parte_izquierda
+
+  48  M :
+
+  49  N :
+
+  50  asignacion : parte_izquierda ASIG exp SEMICOLON
+
+  51  casos : caso casos
+  52        | PRED
+  53        |
+
+  54  caso : CASE opcion COLON instrucciones
+
+  55  opcion : LITERAL_ENTERA
+  56         | LITERAL_RUNA
+
+  57  parte_izquierda : ID localizacion
+  58                  | ID
+
+  59  localizacion : arreglo
+  60               | estructurado
+
+  61  arreglo : arreglo LCORCHETE exp RCORCHETE
+  62          | LCORCHETE exp RCORCHETE
+
+  63  estructurado : estructurado PUNTO ID
+  64               | PUNTO ID
+
+  65  parametros : lista_param
+  66             |
+
+  67  lista_param : lista_param COMA exp
+  68              | exp
+
+  69  exp : LITERAL_ENTERA
+  70      | exp SUMA exp
+  71      | exp RESTA exp
+  72      | exp MULTI exp
+  73      | LPAR exp RPAR
+  74      | exp DIVI exp
+  75      | RESTA exp
+  76      | exp POTE exp
+  77      | exp OR M exp
+  78      | exp AND exp
+  79      | exp IGUAL exp
+  80      | exp DESIGUAL exp
+  81      | exp MENORQUE exp
+  82      | exp MENORIGUAL exp
+  83      | exp MAYORQUE exp
+  84      | exp MAYORIGUAL exp
+  85      | exp MOD exp
+  86      | exp DIVENTERA exp
+  87      | NEG exp
+  88      | ID
+  89      | ID '(' parametros ')'
+  90      | TRUE
+  91      | FALSE
+
+  92  exp1 : exp1 OR M exp1
+  93       | exp1 AND M exp1
+  94       | LPAR exp1 RPAR
+  95       | exp1 IGUAL exp1
+  96       | exp1 DESIGUAL exp1
+  97       | exp1 MENORQUE exp1
+  98       | exp1 MENORIGUAL exp1
+  99       | exp1 MAYORQUE exp1
+ 100       | exp1 MAYORIGUAL exp1
+ 101       | NEG exp1
+ 102       | ID
+ 103       | ID '(' parametros ')'
+ 104       | TRUE
+ 105       | FALSE
+ 106       | LITERAL_ENTERA
+
+state 0
+	$accept : . input $end  (0)
+	input : .  (1)
+
+	.  reduce 1
+
+	input  goto 1
+
+
+1: shift/reduce conflict (shift 2, reduce 6) on PROTO
+state 1
+	$accept : input . $end  (0)
+	input : input . line  (2)
+	decl_proto : .  (6)
+
+	$end  accept
+	PROTO  shift 2
+	$end  reduce 6
+	STRUCT  reduce 6
+	PTR  reduce 6
+	INT  reduce 6
+	FLOAT  reduce 6
+	DOUBLE  reduce 6
+	COMPLEX  reduce 6
+	RUNE  reduce 6
+	VOID  reduce 6
+	STRING  reduce 6
+	FUNC  reduce 6
+
+	line  goto 3
+	programa  goto 4
+	decl_proto  goto 5
+
+
+state 2
+	decl_proto : PROTO . tipo ID LPAR argumentos RPAR SEMICOLON decl_proto  (5)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	.  error
+
+	tipo  goto 15
+	basico  goto 16
+	puntero  goto 17
+
+
+state 3
+	input : input line .  (2)
+
+	.  reduce 2
+
+
+state 4
+	line : programa .  (3)
+
+	.  reduce 3
+
+
+5: shift/reduce conflict (shift 6, reduce 8) on STRUCT
+5: shift/reduce conflict (shift 7, reduce 8) on PTR
+5: shift/reduce conflict (shift 8, reduce 8) on INT
+5: shift/reduce conflict (shift 9, reduce 8) on FLOAT
+5: shift/reduce conflict (shift 10, reduce 8) on DOUBLE
+5: shift/reduce conflict (shift 11, reduce 8) on COMPLEX
+5: shift/reduce conflict (shift 12, reduce 8) on RUNE
+5: shift/reduce conflict (shift 13, reduce 8) on VOID
+5: shift/reduce conflict (shift 14, reduce 8) on STRING
+state 5
+	programa : decl_proto . decl_var decl_func  (4)
+	decl_var : .  (8)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	$end  reduce 8
+	PROTO  reduce 8
+	FUNC  reduce 8
+
+	decl_var  goto 18
+	tipo  goto 19
+	basico  goto 16
+	puntero  goto 17
+
+
+state 6
+	tipo : STRUCT . LLLAVE decl_var RLLAVE  (10)
+
+	LLLAVE  shift 20
+	.  error
+
+
+state 7
+	puntero : PTR . basico  (12)
+
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	.  error
+
+	basico  goto 21
+
+
+state 8
+	basico : INT .  (13)
+
+	.  reduce 13
+
+
+state 9
+	basico : FLOAT .  (14)
+
+	.  reduce 14
+
+
+state 10
+	basico : DOUBLE .  (15)
+
+	.  reduce 15
+
+
+state 11
+	basico : COMPLEX .  (16)
+
+	.  reduce 16
+
+
+state 12
+	basico : RUNE .  (17)
+
+	.  reduce 17
+
+
+state 13
+	basico : VOID .  (18)
+
+	.  reduce 18
+
+
+state 14
+	basico : STRING .  (19)
+
+	.  reduce 19
+
+
+state 15
+	decl_proto : PROTO tipo . ID LPAR argumentos RPAR SEMICOLON decl_proto  (5)
+
+	ID  shift 22
+	.  error
+
+
+state 16
+	tipo : basico . compuesto  (9)
+	compuesto : .  (21)
+
+	LCORCHETE  shift 23
+	ID  reduce 21
+
+	compuesto  goto 24
+
+
+state 17
+	tipo : puntero .  (11)
+
+	.  reduce 11
+
+
+18: shift/reduce conflict (shift 25, reduce 25) on FUNC
+state 18
+	programa : decl_proto decl_var . decl_func  (4)
+	decl_func : .  (25)
+
+	FUNC  shift 25
+	$end  reduce 25
+	PROTO  reduce 25
+	STRUCT  reduce 25
+	PTR  reduce 25
+	INT  reduce 25
+	FLOAT  reduce 25
+	DOUBLE  reduce 25
+	COMPLEX  reduce 25
+	RUNE  reduce 25
+	VOID  reduce 25
+	STRING  reduce 25
+
+	decl_func  goto 26
+
+
+state 19
+	decl_var : tipo . lista_var SEMICOLON decl_var  (7)
+
+	ID  shift 27
+	.  error
+
+	lista_var  goto 28
+
+
+state 20
+	tipo : STRUCT LLLAVE . decl_var RLLAVE  (10)
+	decl_var : .  (8)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	RLLAVE  reduce 8
+
+	decl_var  goto 29
+	tipo  goto 19
+	basico  goto 16
+	puntero  goto 17
+
+
+state 21
+	puntero : PTR basico .  (12)
+
+	.  reduce 12
+
+
+state 22
+	decl_proto : PROTO tipo ID . LPAR argumentos RPAR SEMICOLON decl_proto  (5)
+
+	LPAR  shift 30
+	.  error
+
+
+state 23
+	compuesto : LCORCHETE . LITERAL_ENTERA RCORCHETE compuesto  (20)
+
+	LITERAL_ENTERA  shift 31
+	.  error
+
+
+state 24
+	tipo : basico compuesto .  (9)
+
+	.  reduce 9
+
+
+state 25
+	decl_func : FUNC . tipo ID LPAR argumentos RPAR bloque decl_func  (24)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	.  error
+
+	tipo  goto 32
+	basico  goto 16
+	puntero  goto 17
+
+
+state 26
+	programa : decl_proto decl_var decl_func .  (4)
+
+	.  reduce 4
+
+
+state 27
+	lista_var : ID .  (23)
+
+	.  reduce 23
+
+
+state 28
+	decl_var : tipo lista_var . SEMICOLON decl_var  (7)
+	lista_var : lista_var . COMA ID  (22)
+
+	COMA  shift 33
+	SEMICOLON  shift 34
+	.  error
+
+
+state 29
+	tipo : STRUCT LLLAVE decl_var . RLLAVE  (10)
+
+	RLLAVE  shift 35
+	.  error
+
+
+state 30
+	decl_proto : PROTO tipo ID LPAR . argumentos RPAR SEMICOLON decl_proto  (5)
+	argumentos : .  (27)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	RPAR  reduce 27
+
+	tipo  goto 36
+	argumentos  goto 37
+	basico  goto 16
+	puntero  goto 17
+	lista_args  goto 38
+
+
+state 31
+	compuesto : LCORCHETE LITERAL_ENTERA . RCORCHETE compuesto  (20)
+
+	RCORCHETE  shift 39
+	.  error
+
+
+state 32
+	decl_func : FUNC tipo . ID LPAR argumentos RPAR bloque decl_func  (24)
+
+	ID  shift 40
+	.  error
+
+
+state 33
+	lista_var : lista_var COMA . ID  (22)
+
+	ID  shift 41
+	.  error
+
+
+34: shift/reduce conflict (shift 6, reduce 8) on STRUCT
+34: shift/reduce conflict (shift 7, reduce 8) on PTR
+34: shift/reduce conflict (shift 8, reduce 8) on INT
+34: shift/reduce conflict (shift 9, reduce 8) on FLOAT
+34: shift/reduce conflict (shift 10, reduce 8) on DOUBLE
+34: shift/reduce conflict (shift 11, reduce 8) on COMPLEX
+34: shift/reduce conflict (shift 12, reduce 8) on RUNE
+34: shift/reduce conflict (shift 13, reduce 8) on VOID
+34: shift/reduce conflict (shift 14, reduce 8) on STRING
+state 34
+	decl_var : tipo lista_var SEMICOLON . decl_var  (7)
+	decl_var : .  (8)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	$end  reduce 8
+	ID  reduce 8
+	PROTO  reduce 8
+	FUNC  reduce 8
+	IF  reduce 8
+	WHILE  reduce 8
+	DO  reduce 8
+	BREAK  reduce 8
+	RETURN  reduce 8
+	SWITCH  reduce 8
+	PRINT  reduce 8
+	SCAN  reduce 8
+	LLLAVE  reduce 8
+	RLLAVE  reduce 8
+
+	decl_var  goto 42
+	tipo  goto 19
+	basico  goto 16
+	puntero  goto 17
+
+
+state 35
+	tipo : STRUCT LLLAVE decl_var RLLAVE .  (10)
+
+	.  reduce 10
+
+
+state 36
+	lista_args : tipo . ID  (29)
+
+	ID  shift 43
+	.  error
+
+
+state 37
+	decl_proto : PROTO tipo ID LPAR argumentos . RPAR SEMICOLON decl_proto  (5)
+
+	RPAR  shift 44
+	.  error
+
+
+state 38
+	argumentos : lista_args .  (26)
+	lista_args : lista_args . COMA tipo ID  (28)
+
+	COMA  shift 45
+	RPAR  reduce 26
+
+
+state 39
+	compuesto : LCORCHETE LITERAL_ENTERA RCORCHETE . compuesto  (20)
+	compuesto : .  (21)
+
+	LCORCHETE  shift 23
+	ID  reduce 21
+
+	compuesto  goto 46
+
+
+state 40
+	decl_func : FUNC tipo ID . LPAR argumentos RPAR bloque decl_func  (24)
+
+	LPAR  shift 47
+	.  error
+
+
+state 41
+	lista_var : lista_var COMA ID .  (22)
+
+	.  reduce 22
+
+
+state 42
+	decl_var : tipo lista_var SEMICOLON decl_var .  (7)
+
+	.  reduce 7
+
+
+state 43
+	lista_args : tipo ID .  (29)
+
+	.  reduce 29
+
+
+state 44
+	decl_proto : PROTO tipo ID LPAR argumentos RPAR . SEMICOLON decl_proto  (5)
+
+	SEMICOLON  shift 48
+	.  error
+
+
+state 45
+	lista_args : lista_args COMA . tipo ID  (28)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	.  error
+
+	tipo  goto 49
+	basico  goto 16
+	puntero  goto 17
+
+
+state 46
+	compuesto : LCORCHETE LITERAL_ENTERA RCORCHETE compuesto .  (20)
+
+	.  reduce 20
+
+
+state 47
+	decl_func : FUNC tipo ID LPAR . argumentos RPAR bloque decl_func  (24)
+	argumentos : .  (27)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	RPAR  reduce 27
+
+	tipo  goto 36
+	argumentos  goto 50
+	basico  goto 16
+	puntero  goto 17
+	lista_args  goto 38
+
+
+48: shift/reduce conflict (shift 2, reduce 6) on PROTO
+state 48
+	decl_proto : PROTO tipo ID LPAR argumentos RPAR SEMICOLON . decl_proto  (5)
+	decl_proto : .  (6)
+
+	PROTO  shift 2
+	$end  reduce 6
+	STRUCT  reduce 6
+	PTR  reduce 6
+	INT  reduce 6
+	FLOAT  reduce 6
+	DOUBLE  reduce 6
+	COMPLEX  reduce 6
+	RUNE  reduce 6
+	VOID  reduce 6
+	STRING  reduce 6
+	FUNC  reduce 6
+
+	decl_proto  goto 51
+
+
+state 49
+	lista_args : lista_args COMA tipo . ID  (28)
+
+	ID  shift 52
+	.  error
+
+
+state 50
+	decl_func : FUNC tipo ID LPAR argumentos . RPAR bloque decl_func  (24)
+
+	RPAR  shift 53
+	.  error
+
+
+state 51
+	decl_proto : PROTO tipo ID LPAR argumentos RPAR SEMICOLON decl_proto .  (5)
+
+	.  reduce 5
+
+
+state 52
+	lista_args : lista_args COMA tipo ID .  (28)
+
+	.  reduce 28
+
+
+state 53
+	decl_func : FUNC tipo ID LPAR argumentos RPAR . bloque decl_func  (24)
+
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 55
+
+
+state 54
+	bloque : LLLAVE . declaraciones instrucciones RLLAVE  (30)
+	decl_var : .  (8)
+
+	STRUCT  shift 6
+	PTR  shift 7
+	INT  shift 8
+	FLOAT  shift 9
+	DOUBLE  shift 10
+	COMPLEX  shift 11
+	RUNE  shift 12
+	VOID  shift 13
+	STRING  shift 14
+	ID  reduce 8
+	IF  reduce 8
+	WHILE  reduce 8
+	DO  reduce 8
+	BREAK  reduce 8
+	RETURN  reduce 8
+	SWITCH  reduce 8
+	PRINT  reduce 8
+	SCAN  reduce 8
+	LLLAVE  reduce 8
+
+	decl_var  goto 56
+	tipo  goto 19
+	basico  goto 16
+	puntero  goto 17
+	declaraciones  goto 57
+
+
+55: shift/reduce conflict (shift 25, reduce 25) on FUNC
+state 55
+	decl_func : FUNC tipo ID LPAR argumentos RPAR bloque . decl_func  (24)
+	decl_func : .  (25)
+
+	FUNC  shift 25
+	$end  reduce 25
+	PROTO  reduce 25
+	STRUCT  reduce 25
+	PTR  reduce 25
+	INT  reduce 25
+	FLOAT  reduce 25
+	DOUBLE  reduce 25
+	COMPLEX  reduce 25
+	RUNE  reduce 25
+	VOID  reduce 25
+	STRING  reduce 25
+
+	decl_func  goto 58
+
+
+state 56
+	declaraciones : decl_var .  (31)
+
+	.  reduce 31
+
+
+state 57
+	bloque : LLLAVE declaraciones . instrucciones RLLAVE  (30)
+
+	ID  shift 59
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 68
+	instrucciones  goto 69
+	sentencia  goto 70
+	asignacion  goto 71
+	resolve  goto 72
+	matched_stmt  goto 73
+	parte_izquierda  goto 74
+
+
+state 58
+	decl_func : FUNC tipo ID LPAR argumentos RPAR bloque decl_func .  (24)
+
+	.  reduce 24
+
+
+state 59
+	parte_izquierda : ID . localizacion  (57)
+	parte_izquierda : ID .  (58)
+
+	LCORCHETE  shift 75
+	PUNTO  shift 76
+	ID  reduce 58
+	IF  reduce 58
+	ELSE  reduce 58
+	WHILE  reduce 58
+	DO  reduce 58
+	BREAK  reduce 58
+	RETURN  reduce 58
+	SWITCH  reduce 58
+	CASE  reduce 58
+	PRINT  reduce 58
+	SCAN  reduce 58
+	LLLAVE  reduce 58
+	RLLAVE  reduce 58
+	ASIG  reduce 58
+	PRED  reduce 58
+
+	localizacion  goto 77
+	arreglo  goto 78
+	estructurado  goto 79
+
+
+state 60
+	matched_stmt : IF . LPAR exp1 RPAR M matched_stmt  (37)
+	matched_stmt : IF . LPAR exp1 RPAR M matched_stmt ELSE N M matched_stmt  (38)
+
+	LPAR  shift 80
+	.  error
+
+
+state 61
+	matched_stmt : WHILE . LPAR exp1 RPAR matched_stmt  (39)
+
+	LPAR  shift 81
+	.  error
+
+
+state 62
+	matched_stmt : DO . matched_stmt WHILE LPAR exp RPAR SEMICOLON  (40)
+
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 68
+	matched_stmt  goto 82
+
+
+state 63
+	matched_stmt : BREAK . SEMICOLON  (41)
+
+	SEMICOLON  shift 83
+	.  error
+
+
+state 64
+	matched_stmt : RETURN . exp SEMICOLON  (43)
+	matched_stmt : RETURN . SEMICOLON  (44)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	SEMICOLON  shift 89
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 92
+
+
+state 65
+	matched_stmt : SWITCH . LPAR exp RPAR LLLAVE casos RLLAVE  (45)
+
+	LPAR  shift 93
+	.  error
+
+
+state 66
+	matched_stmt : PRINT . exp SEMICOLON  (46)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 94
+
+
+state 67
+	matched_stmt : SCAN . parte_izquierda  (47)
+
+	ID  shift 59
+	.  error
+
+	parte_izquierda  goto 95
+
+
+state 68
+	matched_stmt : bloque .  (42)
+
+	.  reduce 42
+
+
+state 69
+	bloque : LLLAVE declaraciones instrucciones . RLLAVE  (30)
+	instrucciones : instrucciones . sentencia  (32)
+
+	ID  shift 59
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	RLLAVE  shift 96
+	.  error
+
+	bloque  goto 68
+	sentencia  goto 97
+	asignacion  goto 71
+	resolve  goto 72
+	matched_stmt  goto 73
+	parte_izquierda  goto 74
+
+
+state 70
+	instrucciones : sentencia .  (33)
+
+	.  reduce 33
+
+
+state 71
+	sentencia : asignacion .  (34)
+
+	.  reduce 34
+
+
+state 72
+	sentencia : resolve .  (35)
+
+	.  reduce 35
+
+
+state 73
+	resolve : matched_stmt . M  (36)
+	M : .  (48)
+
+	.  reduce 48
+
+	M  goto 98
+
+
+state 74
+	asignacion : parte_izquierda . ASIG exp SEMICOLON  (50)
+
+	ASIG  shift 99
+	.  error
+
+
+state 75
+	arreglo : LCORCHETE . exp RCORCHETE  (62)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 100
+
+
+state 76
+	estructurado : PUNTO . ID  (64)
+
+	ID  shift 101
+	.  error
+
+
+state 77
+	parte_izquierda : ID localizacion .  (57)
+
+	.  reduce 57
+
+
+state 78
+	localizacion : arreglo .  (59)
+	arreglo : arreglo . LCORCHETE exp RCORCHETE  (61)
+
+	LCORCHETE  shift 102
+	ID  reduce 59
+	IF  reduce 59
+	ELSE  reduce 59
+	WHILE  reduce 59
+	DO  reduce 59
+	BREAK  reduce 59
+	RETURN  reduce 59
+	SWITCH  reduce 59
+	CASE  reduce 59
+	PRINT  reduce 59
+	SCAN  reduce 59
+	LLLAVE  reduce 59
+	RLLAVE  reduce 59
+	ASIG  reduce 59
+	PRED  reduce 59
+
+
+state 79
+	localizacion : estructurado .  (60)
+	estructurado : estructurado . PUNTO ID  (63)
+
+	PUNTO  shift 103
+	ID  reduce 60
+	IF  reduce 60
+	ELSE  reduce 60
+	WHILE  reduce 60
+	DO  reduce 60
+	BREAK  reduce 60
+	RETURN  reduce 60
+	SWITCH  reduce 60
+	CASE  reduce 60
+	PRINT  reduce 60
+	SCAN  reduce 60
+	LLLAVE  reduce 60
+	RLLAVE  reduce 60
+	ASIG  reduce 60
+	PRED  reduce 60
+
+
+state 80
+	matched_stmt : IF LPAR . exp1 RPAR M matched_stmt  (37)
+	matched_stmt : IF LPAR . exp1 RPAR M matched_stmt ELSE N M matched_stmt  (38)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 110
+
+
+state 81
+	matched_stmt : WHILE LPAR . exp1 RPAR matched_stmt  (39)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 111
+
+
+state 82
+	matched_stmt : DO matched_stmt . WHILE LPAR exp RPAR SEMICOLON  (40)
+
+	WHILE  shift 112
+	.  error
+
+
+state 83
+	matched_stmt : BREAK SEMICOLON .  (41)
+
+	.  reduce 41
+
+
+state 84
+	exp : RESTA . exp  (75)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 113
+
+
+state 85
+	exp : LPAR . exp RPAR  (73)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 114
+
+
+state 86
+	exp : ID .  (88)
+	exp : ID . '(' parametros ')'  (89)
+
+	'('  shift 115
+	SUMA  reduce 88
+	RESTA  reduce 88
+	MULTI  reduce 88
+	DIVI  reduce 88
+	POTE  reduce 88
+	RPAR  reduce 88
+	RCORCHETE  reduce 88
+	COMA  reduce 88
+	SEMICOLON  reduce 88
+	OR  reduce 88
+	AND  reduce 88
+	IGUAL  reduce 88
+	DESIGUAL  reduce 88
+	MENORQUE  reduce 88
+	MENORIGUAL  reduce 88
+	MAYORQUE  reduce 88
+	MAYORIGUAL  reduce 88
+	MOD  reduce 88
+	DIVENTERA  reduce 88
+	')'  reduce 88
+
+
+state 87
+	exp : TRUE .  (90)
+
+	.  reduce 90
+
+
+state 88
+	exp : FALSE .  (91)
+
+	.  reduce 91
+
+
+state 89
+	matched_stmt : RETURN SEMICOLON .  (44)
+
+	.  reduce 44
+
+
+state 90
+	exp : NEG . exp  (87)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 116
+
+
+state 91
+	exp : LITERAL_ENTERA .  (69)
+
+	.  reduce 69
+
+
+state 92
+	matched_stmt : RETURN exp . SEMICOLON  (43)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	SEMICOLON  shift 122
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 93
+	matched_stmt : SWITCH LPAR . exp RPAR LLLAVE casos RLLAVE  (45)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 133
+
+
+state 94
+	matched_stmt : PRINT exp . SEMICOLON  (46)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	SEMICOLON  shift 134
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 95
+	matched_stmt : SCAN parte_izquierda .  (47)
+
+	.  reduce 47
+
+
+state 96
+	bloque : LLLAVE declaraciones instrucciones RLLAVE .  (30)
+
+	.  reduce 30
+
+
+state 97
+	instrucciones : instrucciones sentencia .  (32)
+
+	.  reduce 32
+
+
+state 98
+	resolve : matched_stmt M .  (36)
+
+	.  reduce 36
+
+
+state 99
+	asignacion : parte_izquierda ASIG . exp SEMICOLON  (50)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 135
+
+
+state 100
+	arreglo : LCORCHETE exp . RCORCHETE  (62)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	RCORCHETE  shift 136
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 101
+	estructurado : PUNTO ID .  (64)
+
+	.  reduce 64
+
+
+state 102
+	arreglo : arreglo LCORCHETE . exp RCORCHETE  (61)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 137
+
+
+state 103
+	estructurado : estructurado PUNTO . ID  (63)
+
+	ID  shift 138
+	.  error
+
+
+state 104
+	exp1 : LPAR . exp1 RPAR  (94)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 139
+
+
+state 105
+	exp1 : ID .  (102)
+	exp1 : ID . '(' parametros ')'  (103)
+
+	'('  shift 140
+	RPAR  reduce 102
+	OR  reduce 102
+	AND  reduce 102
+	IGUAL  reduce 102
+	DESIGUAL  reduce 102
+	MENORQUE  reduce 102
+	MENORIGUAL  reduce 102
+	MAYORQUE  reduce 102
+	MAYORIGUAL  reduce 102
+
+
+state 106
+	exp1 : TRUE .  (104)
+
+	.  reduce 104
+
+
+state 107
+	exp1 : FALSE .  (105)
+
+	.  reduce 105
+
+
+state 108
+	exp1 : NEG . exp1  (101)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 141
+
+
+state 109
+	exp1 : LITERAL_ENTERA .  (106)
+
+	.  reduce 106
+
+
+state 110
+	matched_stmt : IF LPAR exp1 . RPAR M matched_stmt  (37)
+	matched_stmt : IF LPAR exp1 . RPAR M matched_stmt ELSE N M matched_stmt  (38)
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	RPAR  shift 142
+	OR  shift 143
+	AND  shift 144
+	IGUAL  shift 145
+	DESIGUAL  shift 146
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	.  error
+
+
+state 111
+	matched_stmt : WHILE LPAR exp1 . RPAR matched_stmt  (39)
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	RPAR  shift 151
+	OR  shift 143
+	AND  shift 144
+	IGUAL  shift 145
+	DESIGUAL  shift 146
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	.  error
+
+
+state 112
+	matched_stmt : DO matched_stmt WHILE . LPAR exp RPAR SEMICOLON  (40)
+
+	LPAR  shift 152
+	.  error
+
+
+state 113
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : RESTA exp .  (75)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	.  reduce 75
+
+
+state 114
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : LPAR exp . RPAR  (73)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	RPAR  shift 153
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 115
+	exp : ID '(' . parametros ')'  (89)
+	parametros : .  (66)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	')'  reduce 66
+
+	exp  goto 154
+	parametros  goto 155
+	lista_param  goto 156
+
+
+state 116
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+	exp : NEG exp .  (87)
+
+	.  reduce 87
+
+
+state 117
+	exp : exp SUMA . exp  (70)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 157
+
+
+state 118
+	exp : exp RESTA . exp  (71)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 158
+
+
+state 119
+	exp : exp MULTI . exp  (72)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 159
+
+
+state 120
+	exp : exp DIVI . exp  (74)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 160
+
+
+state 121
+	exp : exp POTE . exp  (76)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 161
+
+
+state 122
+	matched_stmt : RETURN exp SEMICOLON .  (43)
+
+	.  reduce 43
+
+
+state 123
+	exp : exp OR . M exp  (77)
+	M : .  (48)
+
+	.  reduce 48
+
+	M  goto 162
+
+
+state 124
+	exp : exp AND . exp  (78)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 163
+
+
+state 125
+	exp : exp IGUAL . exp  (79)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 164
+
+
+state 126
+	exp : exp DESIGUAL . exp  (80)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 165
+
+
+state 127
+	exp : exp MENORQUE . exp  (81)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 166
+
+
+state 128
+	exp : exp MENORIGUAL . exp  (82)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 167
+
+
+state 129
+	exp : exp MAYORQUE . exp  (83)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 168
+
+
+state 130
+	exp : exp MAYORIGUAL . exp  (84)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 169
+
+
+state 131
+	exp : exp MOD . exp  (85)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 170
+
+
+state 132
+	exp : exp DIVENTERA . exp  (86)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 171
+
+
+state 133
+	matched_stmt : SWITCH LPAR exp . RPAR LLLAVE casos RLLAVE  (45)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	RPAR  shift 172
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 134
+	matched_stmt : PRINT exp SEMICOLON .  (46)
+
+	.  reduce 46
+
+
+state 135
+	asignacion : parte_izquierda ASIG exp . SEMICOLON  (50)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	SEMICOLON  shift 173
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 136
+	arreglo : LCORCHETE exp RCORCHETE .  (62)
+
+	.  reduce 62
+
+
+state 137
+	arreglo : arreglo LCORCHETE exp . RCORCHETE  (61)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	RCORCHETE  shift 174
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 138
+	estructurado : estructurado PUNTO ID .  (63)
+
+	.  reduce 63
+
+
+state 139
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : LPAR exp1 . RPAR  (94)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	RPAR  shift 175
+	OR  shift 143
+	AND  shift 144
+	IGUAL  shift 145
+	DESIGUAL  shift 146
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	.  error
+
+
+state 140
+	exp1 : ID '(' . parametros ')'  (103)
+	parametros : .  (66)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	')'  reduce 66
+
+	exp  goto 154
+	parametros  goto 176
+	lista_param  goto 156
+
+
+state 141
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+	exp1 : NEG exp1 .  (101)
+
+	.  reduce 101
+
+
+state 142
+	matched_stmt : IF LPAR exp1 RPAR . M matched_stmt  (37)
+	matched_stmt : IF LPAR exp1 RPAR . M matched_stmt ELSE N M matched_stmt  (38)
+	M : .  (48)
+
+	.  reduce 48
+
+	M  goto 177
+
+
+state 143
+	exp1 : exp1 OR . M exp1  (92)
+	M : .  (48)
+
+	.  reduce 48
+
+	M  goto 178
+
+
+state 144
+	exp1 : exp1 AND . M exp1  (93)
+	M : .  (48)
+
+	.  reduce 48
+
+	M  goto 179
+
+
+state 145
+	exp1 : exp1 IGUAL . exp1  (95)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 180
+
+
+state 146
+	exp1 : exp1 DESIGUAL . exp1  (96)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 181
+
+
+state 147
+	exp1 : exp1 MENORQUE . exp1  (97)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 182
+
+
+state 148
+	exp1 : exp1 MENORIGUAL . exp1  (98)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 183
+
+
+state 149
+	exp1 : exp1 MAYORQUE . exp1  (99)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 184
+
+
+state 150
+	exp1 : exp1 MAYORIGUAL . exp1  (100)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 185
+
+
+state 151
+	matched_stmt : WHILE LPAR exp1 RPAR . matched_stmt  (39)
+
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 68
+	matched_stmt  goto 186
+
+
+state 152
+	matched_stmt : DO matched_stmt WHILE LPAR . exp RPAR SEMICOLON  (40)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 187
+
+
+state 153
+	exp : LPAR exp RPAR .  (73)
+
+	.  reduce 73
+
+
+state 154
+	lista_param : exp .  (68)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	COMA  reduce 68
+	')'  reduce 68
+
+
+state 155
+	exp : ID '(' parametros . ')'  (89)
+
+	')'  shift 188
+	.  error
+
+
+state 156
+	parametros : lista_param .  (65)
+	lista_param : lista_param . COMA exp  (67)
+
+	COMA  shift 189
+	')'  reduce 65
+
+
+state 157
+	exp : exp . SUMA exp  (70)
+	exp : exp SUMA exp .  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 70
+	RESTA  reduce 70
+	RPAR  reduce 70
+	RCORCHETE  reduce 70
+	COMA  reduce 70
+	SEMICOLON  reduce 70
+	')'  reduce 70
+
+
+state 158
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp RESTA exp .  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 71
+	RESTA  reduce 71
+	RPAR  reduce 71
+	RCORCHETE  reduce 71
+	COMA  reduce 71
+	SEMICOLON  reduce 71
+	')'  reduce 71
+
+
+state 159
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp MULTI exp .  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 72
+	RESTA  reduce 72
+	MULTI  reduce 72
+	DIVI  reduce 72
+	RPAR  reduce 72
+	RCORCHETE  reduce 72
+	COMA  reduce 72
+	SEMICOLON  reduce 72
+	')'  reduce 72
+
+
+state 160
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp DIVI exp .  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 74
+	RESTA  reduce 74
+	MULTI  reduce 74
+	DIVI  reduce 74
+	RPAR  reduce 74
+	RCORCHETE  reduce 74
+	COMA  reduce 74
+	SEMICOLON  reduce 74
+	')'  reduce 74
+
+
+state 161
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp POTE exp .  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 76
+	RESTA  reduce 76
+	MULTI  reduce 76
+	DIVI  reduce 76
+	RPAR  reduce 76
+	RCORCHETE  reduce 76
+	COMA  reduce 76
+	SEMICOLON  reduce 76
+	')'  reduce 76
+
+
+state 162
+	exp : exp OR M . exp  (77)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 190
+
+
+state 163
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp AND exp .  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 78
+	RESTA  reduce 78
+	MULTI  reduce 78
+	DIVI  reduce 78
+	POTE  reduce 78
+	RPAR  reduce 78
+	RCORCHETE  reduce 78
+	COMA  reduce 78
+	SEMICOLON  reduce 78
+	OR  reduce 78
+	AND  reduce 78
+	')'  reduce 78
+
+
+state 164
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp IGUAL exp .  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 79
+	RESTA  reduce 79
+	MULTI  reduce 79
+	DIVI  reduce 79
+	POTE  reduce 79
+	RPAR  reduce 79
+	RCORCHETE  reduce 79
+	COMA  reduce 79
+	SEMICOLON  reduce 79
+	OR  reduce 79
+	AND  reduce 79
+	IGUAL  reduce 79
+	DESIGUAL  reduce 79
+	')'  reduce 79
+
+
+state 165
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp DESIGUAL exp .  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 80
+	RESTA  reduce 80
+	MULTI  reduce 80
+	DIVI  reduce 80
+	POTE  reduce 80
+	RPAR  reduce 80
+	RCORCHETE  reduce 80
+	COMA  reduce 80
+	SEMICOLON  reduce 80
+	OR  reduce 80
+	AND  reduce 80
+	IGUAL  reduce 80
+	DESIGUAL  reduce 80
+	')'  reduce 80
+
+
+state 166
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp MENORQUE exp .  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 81
+	RESTA  reduce 81
+	MULTI  reduce 81
+	DIVI  reduce 81
+	POTE  reduce 81
+	RPAR  reduce 81
+	RCORCHETE  reduce 81
+	COMA  reduce 81
+	SEMICOLON  reduce 81
+	OR  reduce 81
+	AND  reduce 81
+	IGUAL  reduce 81
+	DESIGUAL  reduce 81
+	MENORQUE  reduce 81
+	MENORIGUAL  reduce 81
+	MAYORQUE  reduce 81
+	MAYORIGUAL  reduce 81
+	')'  reduce 81
+
+
+state 167
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp MENORIGUAL exp .  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 82
+	RESTA  reduce 82
+	MULTI  reduce 82
+	DIVI  reduce 82
+	POTE  reduce 82
+	RPAR  reduce 82
+	RCORCHETE  reduce 82
+	COMA  reduce 82
+	SEMICOLON  reduce 82
+	OR  reduce 82
+	AND  reduce 82
+	IGUAL  reduce 82
+	DESIGUAL  reduce 82
+	MENORQUE  reduce 82
+	MENORIGUAL  reduce 82
+	MAYORQUE  reduce 82
+	MAYORIGUAL  reduce 82
+	')'  reduce 82
+
+
+state 168
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp MAYORQUE exp .  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 83
+	RESTA  reduce 83
+	MULTI  reduce 83
+	DIVI  reduce 83
+	POTE  reduce 83
+	RPAR  reduce 83
+	RCORCHETE  reduce 83
+	COMA  reduce 83
+	SEMICOLON  reduce 83
+	OR  reduce 83
+	AND  reduce 83
+	IGUAL  reduce 83
+	DESIGUAL  reduce 83
+	MENORQUE  reduce 83
+	MENORIGUAL  reduce 83
+	MAYORQUE  reduce 83
+	MAYORIGUAL  reduce 83
+	')'  reduce 83
+
+
+state 169
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp MAYORIGUAL exp .  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 84
+	RESTA  reduce 84
+	MULTI  reduce 84
+	DIVI  reduce 84
+	POTE  reduce 84
+	RPAR  reduce 84
+	RCORCHETE  reduce 84
+	COMA  reduce 84
+	SEMICOLON  reduce 84
+	OR  reduce 84
+	AND  reduce 84
+	IGUAL  reduce 84
+	DESIGUAL  reduce 84
+	MENORQUE  reduce 84
+	MENORIGUAL  reduce 84
+	MAYORQUE  reduce 84
+	MAYORIGUAL  reduce 84
+	')'  reduce 84
+
+
+state 170
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp MOD exp .  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	.  reduce 85
+
+
+state 171
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+	exp : exp DIVENTERA exp .  (86)
+
+	.  reduce 86
+
+
+state 172
+	matched_stmt : SWITCH LPAR exp RPAR . LLLAVE casos RLLAVE  (45)
+
+	LLLAVE  shift 191
+	.  error
+
+
+state 173
+	asignacion : parte_izquierda ASIG exp SEMICOLON .  (50)
+
+	.  reduce 50
+
+
+state 174
+	arreglo : arreglo LCORCHETE exp RCORCHETE .  (61)
+
+	.  reduce 61
+
+
+state 175
+	exp1 : LPAR exp1 RPAR .  (94)
+
+	.  reduce 94
+
+
+state 176
+	exp1 : ID '(' parametros . ')'  (103)
+
+	')'  shift 192
+	.  error
+
+
+state 177
+	matched_stmt : IF LPAR exp1 RPAR M . matched_stmt  (37)
+	matched_stmt : IF LPAR exp1 RPAR M . matched_stmt ELSE N M matched_stmt  (38)
+
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 68
+	matched_stmt  goto 193
+
+
+state 178
+	exp1 : exp1 OR M . exp1  (92)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 194
+
+
+state 179
+	exp1 : exp1 AND M . exp1  (93)
+
+	LPAR  shift 104
+	ID  shift 105
+	TRUE  shift 106
+	FALSE  shift 107
+	NEG  shift 108
+	LITERAL_ENTERA  shift 109
+	.  error
+
+	exp1  goto 195
+
+
+state 180
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 IGUAL exp1 .  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	RPAR  reduce 95
+	OR  reduce 95
+	AND  reduce 95
+	IGUAL  reduce 95
+	DESIGUAL  reduce 95
+
+
+state 181
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 DESIGUAL exp1 .  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	RPAR  reduce 96
+	OR  reduce 96
+	AND  reduce 96
+	IGUAL  reduce 96
+	DESIGUAL  reduce 96
+
+
+state 182
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 MENORQUE exp1 .  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	.  reduce 97
+
+
+state 183
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 MENORIGUAL exp1 .  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	.  reduce 98
+
+
+state 184
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 MAYORQUE exp1 .  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	.  reduce 99
+
+
+state 185
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+	exp1 : exp1 MAYORIGUAL exp1 .  (100)
+
+	.  reduce 100
+
+
+state 186
+	matched_stmt : WHILE LPAR exp1 RPAR matched_stmt .  (39)
+
+	.  reduce 39
+
+
+state 187
+	matched_stmt : DO matched_stmt WHILE LPAR exp . RPAR SEMICOLON  (40)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	RPAR  shift 196
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	.  error
+
+
+state 188
+	exp : ID '(' parametros ')' .  (89)
+
+	.  reduce 89
+
+
+state 189
+	lista_param : lista_param COMA . exp  (67)
+
+	RESTA  shift 84
+	LPAR  shift 85
+	ID  shift 86
+	TRUE  shift 87
+	FALSE  shift 88
+	NEG  shift 90
+	LITERAL_ENTERA  shift 91
+	.  error
+
+	exp  goto 197
+
+
+state 190
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp OR M exp .  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	SUMA  reduce 77
+	RESTA  reduce 77
+	MULTI  reduce 77
+	DIVI  reduce 77
+	POTE  reduce 77
+	RPAR  reduce 77
+	RCORCHETE  reduce 77
+	COMA  reduce 77
+	SEMICOLON  reduce 77
+	OR  reduce 77
+	')'  reduce 77
+
+
+state 191
+	matched_stmt : SWITCH LPAR exp RPAR LLLAVE . casos RLLAVE  (45)
+	casos : .  (53)
+
+	CASE  shift 198
+	PRED  shift 199
+	RLLAVE  reduce 53
+
+	casos  goto 200
+	caso  goto 201
+
+
+state 192
+	exp1 : ID '(' parametros ')' .  (103)
+
+	.  reduce 103
+
+
+193: shift/reduce conflict (shift 202, reduce 37) on ELSE
+state 193
+	matched_stmt : IF LPAR exp1 RPAR M matched_stmt .  (37)
+	matched_stmt : IF LPAR exp1 RPAR M matched_stmt . ELSE N M matched_stmt  (38)
+
+	ELSE  shift 202
+	ID  reduce 37
+	IF  reduce 37
+	WHILE  reduce 37
+	DO  reduce 37
+	BREAK  reduce 37
+	RETURN  reduce 37
+	SWITCH  reduce 37
+	CASE  reduce 37
+	PRINT  reduce 37
+	SCAN  reduce 37
+	LLLAVE  reduce 37
+	RLLAVE  reduce 37
+	PRED  reduce 37
+
+
+state 194
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 OR M exp1 .  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	AND  shift 144
+	IGUAL  shift 145
+	DESIGUAL  shift 146
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	RPAR  reduce 92
+	OR  reduce 92
+
+
+state 195
+	exp1 : exp1 . OR M exp1  (92)
+	exp1 : exp1 . AND M exp1  (93)
+	exp1 : exp1 AND M exp1 .  (93)
+	exp1 : exp1 . IGUAL exp1  (95)
+	exp1 : exp1 . DESIGUAL exp1  (96)
+	exp1 : exp1 . MENORQUE exp1  (97)
+	exp1 : exp1 . MENORIGUAL exp1  (98)
+	exp1 : exp1 . MAYORQUE exp1  (99)
+	exp1 : exp1 . MAYORIGUAL exp1  (100)
+
+	IGUAL  shift 145
+	DESIGUAL  shift 146
+	MENORQUE  shift 147
+	MENORIGUAL  shift 148
+	MAYORQUE  shift 149
+	MAYORIGUAL  shift 150
+	RPAR  reduce 93
+	OR  reduce 93
+	AND  reduce 93
+
+
+state 196
+	matched_stmt : DO matched_stmt WHILE LPAR exp RPAR . SEMICOLON  (40)
+
+	SEMICOLON  shift 203
+	.  error
+
+
+state 197
+	lista_param : lista_param COMA exp .  (67)
+	exp : exp . SUMA exp  (70)
+	exp : exp . RESTA exp  (71)
+	exp : exp . MULTI exp  (72)
+	exp : exp . DIVI exp  (74)
+	exp : exp . POTE exp  (76)
+	exp : exp . OR M exp  (77)
+	exp : exp . AND exp  (78)
+	exp : exp . IGUAL exp  (79)
+	exp : exp . DESIGUAL exp  (80)
+	exp : exp . MENORQUE exp  (81)
+	exp : exp . MENORIGUAL exp  (82)
+	exp : exp . MAYORQUE exp  (83)
+	exp : exp . MAYORIGUAL exp  (84)
+	exp : exp . MOD exp  (85)
+	exp : exp . DIVENTERA exp  (86)
+
+	SUMA  shift 117
+	RESTA  shift 118
+	MULTI  shift 119
+	DIVI  shift 120
+	POTE  shift 121
+	OR  shift 123
+	AND  shift 124
+	IGUAL  shift 125
+	DESIGUAL  shift 126
+	MENORQUE  shift 127
+	MENORIGUAL  shift 128
+	MAYORQUE  shift 129
+	MAYORIGUAL  shift 130
+	MOD  shift 131
+	DIVENTERA  shift 132
+	COMA  reduce 67
+	')'  reduce 67
+
+
+state 198
+	caso : CASE . opcion COLON instrucciones  (54)
+
+	LITERAL_RUNA  shift 204
+	LITERAL_ENTERA  shift 205
+	.  error
+
+	opcion  goto 206
+
+
+state 199
+	casos : PRED .  (52)
+
+	.  reduce 52
+
+
+state 200
+	matched_stmt : SWITCH LPAR exp RPAR LLLAVE casos . RLLAVE  (45)
+
+	RLLAVE  shift 207
+	.  error
+
+
+state 201
+	casos : caso . casos  (51)
+	casos : .  (53)
+
+	CASE  shift 198
+	PRED  shift 199
+	RLLAVE  reduce 53
+
+	casos  goto 208
+	caso  goto 201
+
+
+state 202
+	matched_stmt : IF LPAR exp1 RPAR M matched_stmt ELSE . N M matched_stmt  (38)
+	N : .  (49)
+
+	.  reduce 49
+
+	N  goto 209
+
+
+state 203
+	matched_stmt : DO matched_stmt WHILE LPAR exp RPAR SEMICOLON .  (40)
+
+	.  reduce 40
+
+
+state 204
+	opcion : LITERAL_RUNA .  (56)
+
+	.  reduce 56
+
+
+state 205
+	opcion : LITERAL_ENTERA .  (55)
+
+	.  reduce 55
+
+
+state 206
+	caso : CASE opcion . COLON instrucciones  (54)
+
+	COLON  shift 210
+	.  error
+
+
+state 207
+	matched_stmt : SWITCH LPAR exp RPAR LLLAVE casos RLLAVE .  (45)
+
+	.  reduce 45
+
+
+state 208
+	casos : caso casos .  (51)
+
+	.  reduce 51
+
+
+state 209
+	matched_stmt : IF LPAR exp1 RPAR M matched_stmt ELSE N . M matched_stmt  (38)
+	M : .  (48)
+
+	.  reduce 48
+
+	M  goto 211
+
+
+state 210
+	caso : CASE opcion COLON . instrucciones  (54)
+
+	ID  shift 59
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 68
+	instrucciones  goto 212
+	sentencia  goto 70
+	asignacion  goto 71
+	resolve  goto 72
+	matched_stmt  goto 73
+	parte_izquierda  goto 74
+
+
+state 211
+	matched_stmt : IF LPAR exp1 RPAR M matched_stmt ELSE N M . matched_stmt  (38)
+
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	.  error
+
+	bloque  goto 68
+	matched_stmt  goto 213
+
+
+state 212
+	instrucciones : instrucciones . sentencia  (32)
+	caso : CASE opcion COLON instrucciones .  (54)
+
+	ID  shift 59
+	IF  shift 60
+	WHILE  shift 61
+	DO  shift 62
+	BREAK  shift 63
+	RETURN  shift 64
+	SWITCH  shift 65
+	PRINT  shift 66
+	SCAN  shift 67
+	LLLAVE  shift 54
+	CASE  reduce 54
+	RLLAVE  reduce 54
+	PRED  reduce 54
+
+	bloque  goto 68
+	sentencia  goto 97
+	asignacion  goto 71
+	resolve  goto 72
+	matched_stmt  goto 73
+	parte_izquierda  goto 74
+
+
+state 213
+	matched_stmt : IF LPAR exp1 RPAR M matched_stmt ELSE N M matched_stmt .  (38)
+
+	.  reduce 38
+
+
+State 1 contains 1 shift/reduce conflict.
+State 5 contains 9 shift/reduce conflicts.
+State 18 contains 1 shift/reduce conflict.
+State 34 contains 9 shift/reduce conflicts.
+State 48 contains 1 shift/reduce conflict.
+State 55 contains 1 shift/reduce conflict.
+State 193 contains 1 shift/reduce conflict.
+
+
+70 terminals, 34 nonterminals
+107 grammar rules, 214 states

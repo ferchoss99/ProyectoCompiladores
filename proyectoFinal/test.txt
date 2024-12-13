@@ -1,0 +1,35 @@
+int y , a,b,c,d ;  
+float z , w ;
+
+
+  func int fernando ( ) { 
+    
+        int x, g , h ;
+        
+        x= 2; 
+        y= 12;
+    
+        z= x/y;
+        w=z+(z-(x*y));
+
+        h = true && (a > d) ;
+    
+
+         if( true){
+              x=7;
+              
+        } else {
+            y=4;
+        }
+
+       
+        
+        }
+    
+
+
+
+
+
+
+
